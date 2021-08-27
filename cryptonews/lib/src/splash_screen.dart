@@ -1,19 +1,14 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
 import 'package:cryptonews/src/config/color_constants.dart';
 import 'package:cryptonews/src/config/image_constants.dart';
 import 'package:cryptonews/src/utils/size_utils.dart';
 import 'package:flutter/material.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:local_database/local_database.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:provider/provider.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:shared/local_database.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:shared/main.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:path_provider/path_provider.dart' as pathProvider;
 
 class SplashScreen extends StatefulWidget {

@@ -1,8 +1,7 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
 import 'package:cryptonews/src/config/color_constants.dart';
 import 'package:flutter/material.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:provider/provider.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:shared/local_database.dart';
 
 class SettingsScreen extends StatefulWidget {

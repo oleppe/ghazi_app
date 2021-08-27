@@ -2,7 +2,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cryptonews/src/config/image_constants.dart';
-import 'package:cryptonews/src/screens/crypto/image_keys.txt';
+import 'package:cryptonews/src/screens/crypto/image_keys.dart';
 import 'package:cryptonews/src/screens/navbar/crypto_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';

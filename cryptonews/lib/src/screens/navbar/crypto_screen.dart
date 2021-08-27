@@ -1,6 +1,7 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
 import 'package:cryptonews/src/config/color_constants.dart';
 import 'package:cryptonews/src/config/image_constants.dart';
-import 'package:cryptonews/src/screens/crypto/image_keys.txt';
+import 'package:cryptonews/src/screens/crypto/image_keys.dart';
 import 'package:cryptonews/src/widgets/contest_tab_header.dart';
 import 'package:cryptonews/src/widgets/vertical_coin.dart';
 import "package:flutter/material.dart";
@@ -8,14 +9,11 @@ import 'package:flutter/services.dart';
 import "dart:collection";
 import "dart:async";
 import "package:intl/intl.dart";
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:shared/local_database.dart';
 import "dart:convert";
 import "package:web_socket_channel/io.dart";
 import "package:http/http.dart" as http;
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:provider/provider.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import "package:auto_size_text/auto_size_text.dart";
 import "dart:math";
 import "package:syncfusion_flutter_charts/charts.dart";

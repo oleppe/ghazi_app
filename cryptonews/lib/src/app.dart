@@ -1,22 +1,15 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
 import 'package:cryptonews/src/config/theme_data.dart';
 import 'package:cryptonews/src/routes/index.dart';
 import 'package:cryptonews/src/utils/app_state_notifier.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:provider/provider.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:shared/local_database.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:shared/main.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:shared/modules/category/resources/firebase_crud_operations.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:shared/modules/news/resources/firebase_news_operations.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:shared/modules/contacts/firebase_crud_contact.dart';
 //import 'package:firebase_messaging/firebase_messaging.dart';
 

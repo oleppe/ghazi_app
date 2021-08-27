@@ -1,18 +1,13 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
 import 'package:cryptonews/src/config/color_constants.dart';
 import 'package:cryptonews/src/widgets/news_appbar.dart';
 import 'package:flutter/material.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_html/flutter_html.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_html/style.dart';
 import 'package:intl/intl.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:provider/provider.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:share/share.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:shared/modules/news/model/news.dart' show News;
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:shared/modules/news/resources/firebase_news_operations.dart';
 
 class NewsPageEx extends StatefulWidget {

@@ -1,14 +1,12 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
 import 'package:cryptonews/src/screens/news/news_page.dart';
 import 'package:cryptonews/src/utils/AdHelper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:shared/modules/news/model/news.dart' show News;
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:shared/modules/news/resources/firebase_news_operations.dart';
 
 import '../../../widgets/hotel_list_view.dart';

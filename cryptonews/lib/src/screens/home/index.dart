@@ -1,4 +1,5 @@
 // home screen contents
+// ignore_for_file: import_of_legacy_library_into_null_safe
 import 'dart:async';
 
 import 'package:cryptonews/src/config/image_constants.dart';
@@ -11,15 +12,12 @@ import 'package:cryptonews/src/widgets/home_appbar.dart';
 import 'package:cryptonews/src/widgets/home_drawer_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:shared/main.dart';
 
 class HomeScreen extends StatefulWidget {
-  // ignore: close_sinks
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }

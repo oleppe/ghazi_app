@@ -1,14 +1,12 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
 import 'package:cryptonews/src/screens/TopBar/all_news.dart';
 import 'package:cryptonews/src/screens/navbar/categories/alt_coin_page.dart';
 import 'package:cryptonews/src/screens/navbar/categories/page_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_tab_bar/indicator/standard_indicator.dart';
 import 'package:flutter_custom_tab_bar/library.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:provider/provider.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:shared/modules/category/model/category.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:shared/modules/category/resources/firebase_crud_operations.dart';
 
 import 'categories/blockchain_page.dart';

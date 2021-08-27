@@ -1,12 +1,10 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
 import 'package:cryptonews/src/config/color_constants.dart';
 import 'package:cryptonews/src/screens/onboarding/login_screen.dart';
 import 'package:cryptonews/src/screens/onboarding/signup_screen.dart';
 import 'package:flutter/material.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_bloc/flutter_bloc.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:fluttertoast/fluttertoast.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:shared/main.dart';
 
 class AuthenticationScreen extends StatefulWidget {
