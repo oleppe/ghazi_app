@@ -1,9 +1,6 @@
-import 'package:cryptonews/src/utils/time_utils.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:shared/modules/authentication/models/article.dart';
 import 'package:shared/modules/news/model/news.dart' show News;
 
 class HotelListView extends StatelessWidget {
@@ -22,6 +19,7 @@ class HotelListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final f = new DateFormat('dd-MM-yy');
     return AnimatedBuilder(
       animation: animationController!,
       builder: (BuildContext context, Widget? child) {
@@ -80,7 +78,7 @@ class HotelListView extends StatelessWidget {
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
                                             Text(hotelData!.name,
-                                                textAlign: TextAlign.left,
+                                                textAlign: TextAlign.right,
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headline4),
@@ -135,9 +133,8 @@ class HotelListView extends StatelessWidget {
                                                     width: 25,
                                                   ),
                                                   Text(
-                                                    TimeUtils.convertToAgo(
-                                                        DateTime.utc(2021, 7,
-                                                            30, 12, 00, 25)),
+                                                    f.format(
+                                                        hotelData!.createdAt),
                                                     style: TextStyle(
                                                         fontSize: 14,
                                                         color: Colors.grey

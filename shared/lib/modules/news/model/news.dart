@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class News {
   News({
     this.id = '',
@@ -25,9 +27,8 @@ class News {
         imagePath = snapshot['imagePath'] ?? '',
         views = snapshot['views'] ?? 15,
         like = snapshot['like'] ?? 3,
-        createdAt = DateTime.fromMillisecondsSinceEpoch(
-                snapshot['created_at'].millisecondsSinceEpoch * 1000) ??
-            '';
+        createdAt = new DateTime.fromMicrosecondsSinceEpoch(
+            (snapshot['created_at'] as Timestamp).microsecondsSinceEpoch);
 
   toJson() {
     return {

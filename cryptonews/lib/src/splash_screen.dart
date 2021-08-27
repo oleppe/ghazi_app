@@ -6,7 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 // ignore: import_of_legacy_library_into_null_safe
+import 'package:local_database/local_database.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:provider/provider.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:shared/local_database.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:shared/main.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:path_provider/path_provider.dart' as pathProvider;
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -24,6 +32,10 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (Provider.of<HomeModel>(context).settings == null ||
+        Provider.of<HomeModel>(context).settings!.isEmpty)
+      Provider.of<HomeModel>(context).getSettings();
+
     SizeConfig().init(context);
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -31,7 +43,16 @@ class _SplashScreenState extends State<SplashScreen> {
           backgroundColor: ColorConstants.secondaryAppColor,
           body: BlocListener<AuthenticationBloc, AuthenticationState>(
             cubit: authenticationBloc,
-            listener: (BuildContext context, AuthenticationState state) {
+            listener: (BuildContext context, AuthenticationState state) async {
+              Database _userData = new Database(
+                  (await pathProvider.getApplicationDocumentsDirectory()).path);
+              bool first = await _userData['firstTime'];
+              if (state is AuthenticationLoading) {
+                if (first == false) {
+                  Navigator.popAndPushNamed(context, '/home');
+                } else
+                  _userData["firstTime"] = false;
+              }
               if (state is AppAutheticated) {
                 //Navigator.pushNamed(context, '/home');
               }
@@ -108,10 +129,10 @@ class _SplashScreenState extends State<SplashScreen> {
                         Navigator.pushNamed(context, '/home');
                       }
                       if (state is AuthenticationStart) {
-                        Navigator.pushNamed(context, '/auth');
+                        Navigator.pushNamed(context, '/home');
                       }
                       if (state is UserLogoutState) {
-                        Navigator.pushNamed(context, '/auth');
+                        Navigator.pushNamed(context, '/home');
                       }
                     },
                     onSkip: () {
@@ -119,10 +140,10 @@ class _SplashScreenState extends State<SplashScreen> {
                         Navigator.pushNamed(context, '/home');
                       }
                       if (state is AuthenticationStart) {
-                        Navigator.pushNamed(context, '/auth');
+                        Navigator.pushNamed(context, '/home');
                       }
                       if (state is UserLogoutState) {
-                        Navigator.pushNamed(context, '/auth');
+                        Navigator.pushNamed(context, '/home');
                       }
                     },
                     showNextButton: false,

@@ -1,5 +1,4 @@
 import 'package:api_sdk/api_constants.dart';
-import 'package:api_sdk/graphql_method/graphql_handler.dart';
 import 'package:api_sdk/rest/rest_api_handler_data.dart';
 
 class ApiSdk {
@@ -21,10 +20,25 @@ class ApiSdk {
     return response;
   }
 
-  static fetchGithubRepoGraphQl(numOfRepositories) async {
-    final GraphqlQlHandler githubRepository =
-        GraphqlQlHandler(client: client());
-    final response = await githubRepository.getRepositories(numOfRepositories);
-    return response;
+  static getMarketData(String link) async {
+    try {
+      final response =
+          await RestApiHandlerData.getData('${apiConstants["market"]}$link');
+      return response["data"];
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  static getExchangeRate() async {
+    try {
+      final response = await RestApiHandlerData.getData(
+          'https://api.coincap.io/v2/rates?limit=73');
+      return response["data"];
+    } catch (e) {
+      print(e);
+      return null;
+    }
   }
 }

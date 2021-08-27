@@ -1,17 +1,17 @@
 import 'package:cryptonews/src/screens/news/news_page.dart';
+import 'package:cryptonews/src/utils/AdHelper.dart';
 import 'package:cryptonews/src/widgets/contest_tab_header.dart';
 import 'package:cryptonews/src/widgets/filter_screen.dart';
 import 'package:cryptonews/src/widgets/hotel_list_view.dart';
 import 'package:cryptonews/src/widgets/vertical_slider.dart';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:provider/provider.dart';
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:shared/modules/authentication/models/article.dart';
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:shared/modules/authentication/models/slider_model.dart'
-    show SliderModel;
 import 'package:shared/modules/news/model/news.dart' show News;
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:shared/modules/news/resources/firebase_news_operations.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AllNews extends StatefulWidget {
   const AllNews({Key? key, required this.selectedCategory}) : super(key: key);
@@ -24,7 +24,6 @@ class _AllNewsState extends State<AllNews>
     with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
   List<News> news = [];
-  List<SliderModel> sliders = SliderModel.sliders;
   AnimationController? animationController;
   late FirebaseNewsOperations newsContext;
   int pageCount = 0;
@@ -33,48 +32,73 @@ class _AllNewsState extends State<AllNews>
     animationController = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this);
     super.initState();
+    _ad = BannerAd(
+      adUnitId: AdHelper.bannerAdUnitId,
+      size: AdSize.banner,
+      request: AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          setState(() {
+            _isAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          // Releases an ad resource when it fails to load
+          ad.dispose();
+
+          print('Ad load failed (code=${error.code} message=${error.message})');
+        },
+      ),
+    );
+    _ad.load();
   }
+
+  static final _kAdIndex = 0;
+
+  late BannerAd _ad;
+
+  bool _isAdLoaded = false;
 
   @override
   Widget build(BuildContext context) {
     newsContext = Provider.of<FirebaseNewsOperations>(context);
     super.build(context);
     return Container(
-      child: NestedScrollView(
-        controller: _scrollController,
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverList(
-              delegate:
-                  SliverChildBuilderDelegate((BuildContext context, int index) {
-                return Column(
-                  children: <Widget>[
-                    //getSearchBarUI(context),
-                    VerticalSlider(imgList: sliders)
-                  ],
-                );
-              }, childCount: 1),
-            ),
-            SliverPersistentHeader(
-              pinned: true,
-              floating: true,
-              delegate: ContestTabHeader(
-                getFilterBarUI(context),
-              ),
-            ),
-          ];
-        },
-        body: Container(
-          color: Theme.of(context).backgroundColor,
-          child: FutureBuilder<List<News>>(
-              future: newsContext.fetchNews(widget.selectedCategory),
-              builder:
-                  (BuildContext context, AsyncSnapshot<List<News>> snapshot) {
-                if (snapshot.hasData) {
-                  if (news!.length == 0) news = (snapshot.data)!;
-                  pageCount = news.length;
-                  return ListView.builder(
-                    itemCount: pageCount,
+      child: FutureBuilder<List<News>>(
+          future: newsContext.fetchNews(widget.selectedCategory),
+          builder: (BuildContext context, AsyncSnapshot<List<News>> snapshot) {
+            if (snapshot.hasData) {
+              if (news.length == 0) news = (snapshot.data)!;
+              pageCount = news.length;
+              return NestedScrollView(
+                controller: _scrollController,
+                headerSliverBuilder:
+                    (BuildContext context, bool innerBoxIsScrolled) {
+                  return <Widget>[
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                          (BuildContext context, int index) {
+                        return Column(
+                          children: <Widget>[
+                            //getSearchBarUI(context),
+                            VerticalSlider(imgList: news.take(4).toList())
+                          ],
+                        );
+                      }, childCount: 1),
+                    ),
+                    SliverPersistentHeader(
+                      pinned: true,
+                      floating: true,
+                      delegate: ContestTabHeader(
+                        getFilterBarUI(context),
+                      ),
+                    ),
+                  ];
+                },
+                body: Container(
+                  color: Theme.of(context).backgroundColor,
+                  child: ListView.builder(
+                    itemCount: pageCount + (_isAdLoaded ? 1 : 0),
                     padding: const EdgeInsets.only(top: 8),
                     scrollDirection: Axis.vertical,
                     itemBuilder: (BuildContext context, int index) {
@@ -86,33 +110,41 @@ class _AllNewsState extends State<AllNews>
                                   curve: Interval((1 / count) * index, 1.0,
                                       curve: Curves.fastOutSlowIn)));
                       animationController?.forward();
+                      if (_isAdLoaded && index == _kAdIndex) {
+                        return Container(
+                          child: AdWidget(ad: _ad),
+                          width: _ad.size.width.toDouble(),
+                          height: 72.0,
+                          alignment: Alignment.center,
+                        );
+                      }
                       return HotelListView(
                         callback: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (_) => NewsPage(news: news[index])));
+                                  builder: (context) =>
+                                      NewsPage(news: news[index])));
                         },
                         hotelData: news[index],
                         animation: animation,
                         animationController: animationController!,
                       );
                     },
-                  );
-                }
-                return Center(
-                  child: Container(
-                    width: 50,
-                    height: 50,
-                    child: CircularProgressIndicator(
-                      backgroundColor:
-                          Theme.of(context).textTheme.bodyText1!.color,
-                    ),
                   ),
-                );
-              }),
-        ),
-      ),
+                ),
+              );
+            }
+            return Center(
+              child: Container(
+                width: 50,
+                height: 50,
+                child: CircularProgressIndicator(
+                  backgroundColor: Theme.of(context).textTheme.bodyText1!.color,
+                ),
+              ),
+            );
+          }),
     );
   }
 
@@ -175,13 +207,13 @@ class _AllNewsState extends State<AllNews>
                       padding: const EdgeInsets.only(left: 8),
                       child: Row(
                         children: <Widget>[
-                          Text('فلتر',
-                              style: Theme.of(context).textTheme.headline6),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(Icons.sort,
-                                color: Theme.of(context).primaryColor),
-                          ),
+                          // Text('فلتر',
+                          //     style: Theme.of(context).textTheme.headline6),
+                          // Padding(
+                          //   padding: const EdgeInsets.all(8.0),
+                          //   child: Icon(Icons.sort,
+                          //       color: Theme.of(context).primaryColor),
+                          // ),
                         ],
                       ),
                     ),

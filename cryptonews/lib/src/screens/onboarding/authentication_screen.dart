@@ -99,6 +99,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                                       SizedBox(
                                         height: 8,
                                       ),
+                                      // ignore: deprecated_member_use
                                       RaisedButton(
                                           color: Color(0xff5E92F3),
                                           textColor: Colors.white,

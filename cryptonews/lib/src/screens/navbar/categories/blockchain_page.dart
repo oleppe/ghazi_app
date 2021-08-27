@@ -13,15 +13,15 @@ import 'package:shared/modules/news/resources/firebase_news_operations.dart';
 
 import '../../../widgets/hotel_list_view.dart';
 
-class PageItem extends StatefulWidget {
+class BlockchainPage extends StatefulWidget {
   final String category;
-  PageItem(this.category, {Key? key}) : super(key: key);
+  BlockchainPage(this.category, {Key? key}) : super(key: key);
 
   @override
-  _PageItemState createState() => _PageItemState();
+  _BlockchainPageState createState() => _BlockchainPageState();
 }
 
-class _PageItemState extends State<PageItem>
+class _BlockchainPageState extends State<BlockchainPage>
     with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   late FirebaseNewsOperations newsContext;
   AnimationController? animationController;
@@ -71,7 +71,7 @@ class _PageItemState extends State<PageItem>
     return Container(
       color: Theme.of(context).backgroundColor,
       child: FutureBuilder<List<News>>(
-          future: newsContext.fetchBitcoinNews(widget.category, true),
+          future: newsContext.fetchBlockchainNews(widget.category, true),
           builder: (BuildContext context, AsyncSnapshot<List<News>> snapshot) {
             if (snapshot.hasData) {
               if (news.length == 0) {
@@ -167,7 +167,7 @@ class _PageItemState extends State<PageItem>
   }
 
   void _onRefresh() async {
-    news = await newsContext.fetchBitcoinNews(widget.category, false,
+    news = await newsContext.fetchBlockchainNews(widget.category, false,
         refresh: true);
     setState(() {
       isLoadMore = true;
@@ -179,7 +179,7 @@ class _PageItemState extends State<PageItem>
   void _onLoading() async {
     if (isLoadMore == false) return;
     List<News> loadNews =
-        await newsContext.fetchBitcoinNews(widget.category, false);
+        await newsContext.fetchBlockchainNews(widget.category, false);
     if (loadNews.length < 3) isLoadMore = false;
 
     pageCount = news.length;

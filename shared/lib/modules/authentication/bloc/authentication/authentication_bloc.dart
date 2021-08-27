@@ -43,7 +43,8 @@ class AuthenticationBloc
         yield SetUserData(
             email: firebaseUser.email, avatar: firebaseUser.avatar);
       else
-        yield AuthenticationStart();
+        yield SetUserData(email: 'newuser@cryptonews.com', avatar: 'avatar');
+      // yield AuthenticationStart();
     }
   }
 

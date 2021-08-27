@@ -60,6 +60,7 @@ class _LoginFormState extends State<LoginForm> {
           const SizedBox(
             height: 16,
           ),
+          // ignore: deprecated_member_use
           RaisedButton(
               color: Color(0xff5E92F3),
               textColor: Colors.white,

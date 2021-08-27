@@ -41,9 +41,6 @@ class ThemeConfig {
       backgroundColor: background,
       primaryColor: accentColor,
       accentColor: accentColor,
-      textSelectionColor: accentColor,
-      textSelectionHandleColor: accentColor,
-      cursorColor: accentColor,
       toggleableActiveColor: accentColor,
       appBarTheme: AppBarTheme(
         brightness: brightness,
@@ -159,6 +156,11 @@ class ThemeConfig {
           fontWeight: FontWeight.w500,
         ),
       ),
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: accentColor,
+        selectionColor: accentColor,
+        selectionHandleColor: accentColor,
+      ),
     );
   }
 
@@ -180,7 +182,7 @@ class ThemeConfig {
         brightness: Brightness.dark,
         background: ColorConstants.darkScaffoldBackgroundColor,
         cardBackground: ColorConstants.secondaryDarkAppColor,
-        primaryText: Colors.white,
+        primaryText: Colors.black,
         secondaryText: (Colors.grey[500])!,
         accentColor: ColorConstants.secondaryDarkAppColor,
         divider: Colors.black45,
