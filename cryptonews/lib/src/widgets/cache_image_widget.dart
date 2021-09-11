@@ -1,5 +1,4 @@
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class CachedImage extends StatelessWidget {
@@ -22,14 +21,6 @@ class CachedImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CachedNetworkImage(
-      imageUrl: imageUrl,
-      fit: fit,
-      height: height,
-      width: width,
-      placeholder: (context, url) => placeholder ?? CircularProgressIndicator(),
-      errorWidget: (context, url, err) =>
-          errorWidget ?? Icon(Icons.error_outline),
-    );
+    return Container();
   }
 }

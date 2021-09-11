@@ -1,12 +1,20 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase;
+import 'package:firebase_core/firebase_core.dart';
 import 'package:shared/main.dart';
 
 class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  AuthService() {}
+  firebase.FirebaseAuth _auth;
   String errorMessage;
 
+  Future<firebase.FirebaseAuth> getAuth() async {
+    if (Firebase.apps.length == 0) await Firebase.initializeApp();
+    return firebase.FirebaseAuth.instance;
+  }
+
   //Create User Object from Firebase User
-  UserFromFirebaseUser _userFromFirebaseUser(FirebaseUser user, token) {
+  UserFromFirebaseUser _userFromFirebaseUser(firebase.User user, token) {
     return user != null
         ? UserFromFirebaseUser(uid: user.uid, email: user.email, token: token)
         : null;
@@ -15,10 +23,10 @@ class AuthService {
   //Signin With email and password
   Future signInWithEmailAndPassword(String email, String password) async {
     try {
-      AuthResult userCredential = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
+      firebase.UserCredential userCredential = await (await getAuth())
+          .signInWithEmailAndPassword(email: email, password: password);
       final res = await userCredential.user.getIdToken();
-      return _userFromFirebaseUser(userCredential.user, res.token);
+      return _userFromFirebaseUser(userCredential.user, res);
     } catch (err) {
       errorMessage = getMessageFromErrorCode(err.code);
       print(errorMessage);
@@ -29,10 +37,10 @@ class AuthService {
   //Register with email and password
   Future registerWithEmailAndPassword(String email, String password) async {
     try {
-      AuthResult userCredential = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+      firebase.UserCredential userCredential = await (await getAuth())
+          .createUserWithEmailAndPassword(email: email, password: password);
       final res = await userCredential.user.getIdToken();
-      return _userFromFirebaseUser(userCredential.user, res.token);
+      return _userFromFirebaseUser(userCredential.user, res);
     } catch (err) {
       errorMessage = getMessageFromErrorCode(err.code);
       print(errorMessage);
@@ -42,10 +50,10 @@ class AuthService {
 
   Future getCurrentUser() async {
     try {
-      final FirebaseUser user = await _auth.currentUser();
+      final firebase.User user = await (await getAuth()).currentUser;
       if (user != null) {
         final res = await user.getIdToken();
-        return _userFromFirebaseUser(user, res.token);
+        return _userFromFirebaseUser(user, res);
       } else {
         return null;
       }
@@ -58,7 +66,7 @@ class AuthService {
 
   //signout
   Future<void> signOut() async {
-    return await _auth.signOut();
+    return await (await getAuth()).signOut();
   }
 
   //getMessageFromErrorCode

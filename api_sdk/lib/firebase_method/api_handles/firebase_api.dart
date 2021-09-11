@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirebaseApi {
-  final Firestore _db = Firestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   FirebaseApi() {}
 
@@ -9,7 +9,7 @@ class FirebaseApi {
     CollectionReference ref;
 
     ref = _db.collection(path);
-    return ref.getDocuments();
+    return ref.get();
   }
 
   Future<QuerySnapshot> getMainNewsCollection(String path) {
@@ -18,7 +18,7 @@ class FirebaseApi {
         .where('category', isEqualTo: "yFIjAzWnl38hcy3BxnGV")
         .orderBy('created_at', descending: true)
         .limit(10)
-        .getDocuments();
+        .get();
   }
 
   Future<QuerySnapshot> getProductCollection(
@@ -29,7 +29,7 @@ class FirebaseApi {
             .where('category', isEqualTo: categoryId)
             .orderBy('created_at', descending: true)
             .limit(3)
-            .getDocuments();
+            .get();
       } catch (e) {
         print(e.toString());
         return null;
@@ -40,7 +40,7 @@ class FirebaseApi {
         .orderBy('created_at', descending: true)
         .startAfterDocument(last)
         .limit(3)
-        .getDocuments();
+        .get();
   }
 
   Stream<QuerySnapshot> streamDataCollection(String path) {
@@ -54,14 +54,14 @@ class FirebaseApi {
     CollectionReference ref;
 
     ref = _db.collection(path);
-    return ref.document(id).get();
+    return ref.doc(id).get();
   }
 
   Future<void> removeDocument(String path, String id) {
     CollectionReference ref;
 
     ref = _db.collection(path);
-    return ref.document(id).delete();
+    return ref.doc(id).delete();
   }
 
   Future<DocumentReference> addDocument(String path, Map data) {
@@ -74,6 +74,6 @@ class FirebaseApi {
     CollectionReference ref;
 
     ref = _db.collection(path);
-    return ref.document(id).updateData(data);
+    return ref.doc(id).update(data);
   }
 }

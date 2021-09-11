@@ -2,6 +2,7 @@
 import 'package:cryptonews/src/config/color_constants.dart';
 import 'package:cryptonews/src/config/image_constants.dart';
 import 'package:cryptonews/src/utils/size_utils.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:introduction_screen/introduction_screen.dart';
@@ -52,7 +53,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 //Navigator.pushNamed(context, '/home');
               }
               if (state is AuthenticationStart) {
-                //Navigator.pushNamed(context, '/auth');
+                Navigator.popAndPushNamed(context, '/home');
               }
               if (state is UserLogoutState) {
                 //Navigator.pushNamed(context, '/auth');
@@ -147,16 +148,6 @@ class _SplashScreenState extends State<SplashScreen> {
                     done: const Text("تم",
                         style: TextStyle(fontWeight: FontWeight.w600)),
                   );
-                  // Stack(
-                  //   children: [
-                  //     Container(
-                  //       decoration: new BoxDecoration(
-                  //         color: Colors.white,
-                  //       ),
-                  //     ),
-                  //     Center(child: Image.asset(AllImages().logo)),
-                  //   ],
-                  // );
                 }),
           )),
     );

@@ -1,3 +1,4 @@
+import 'package:cryptonews/src/config/image_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -53,12 +54,17 @@ class HotelListView extends StatelessWidget {
                           children: <Widget>[
                             AspectRatio(
                               aspectRatio: 2,
-                              child: Image.network(
-                                'https://firebasestorage.googleapis.com/v0/b/cryptonews-c3622.appspot.com/o/articles%2F' +
-                                    hotelData!.imagePath +
-                                    '?alt=media',
-                                fit: BoxFit.cover,
-                              ),
+                              child: hotelData!.imagePath != ''
+                                  ? Image.network(
+                                      'https://firebasestorage.googleapis.com/v0/b/cryptonews-c3622.appspot.com/o/articles%2F' +
+                                          hotelData!.imagePath +
+                                          '?alt=media',
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.asset(
+                                      AllImages().logo,
+                                      fit: BoxFit.contain,
+                                    ),
                             ),
                             Container(
                               color: Theme.of(context).backgroundColor,

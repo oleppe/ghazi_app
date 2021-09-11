@@ -76,79 +76,88 @@ class _ETHPageState extends State<ETHPage>
                 news = (snapshot.data)!;
               }
               pageCount = news.length;
-              return SmartRefresher(
-                enablePullDown: true,
-                enablePullUp: isLoadMore,
-                header: WaterDropHeader(
-                  complete: Text("تم التحديث",
-                      style: Theme.of(context).textTheme.headline6),
-                ),
-                footer: CustomFooter(
-                  builder: (BuildContext context, LoadStatus? mode) {
-                    Widget body;
-                    if (mode == LoadStatus.idle) {
-                      body = Text(
-                        "أرفع لتحميل المزيد",
-                        style: Theme.of(context).textTheme.headline6,
-                      );
-                    } else if (mode == LoadStatus.loading) {
-                      body = CupertinoActivityIndicator();
-                    } else if (mode == LoadStatus.failed) {
-                      body = Text("فشل التحميل",
-                          style: Theme.of(context).textTheme.headline6);
-                    } else if (mode == LoadStatus.canLoading) {
-                      body = Text("أفلت لتحميل المزيد",
-                          style: Theme.of(context).textTheme.headline6);
-                    } else {
-                      body = Text("لايوجد مزيد من الأخبار",
-                          style: Theme.of(context).textTheme.headline6);
-                    }
-                    return Container(
-                      height: 55.0,
-                      child: Center(child: body),
-                    );
-                  },
-                ),
-                controller: _refreshController,
-                onRefresh: _onRefresh,
-                onLoading: _onLoading,
-                child: ListView.builder(
-                  itemCount: pageCount + (_isAdLoaded ? 1 : 0),
-                  padding: const EdgeInsets.only(top: 8),
-                  scrollDirection: Axis.vertical,
-                  itemBuilder: (BuildContext context, int index) {
-                    if (index >= news.length) {
-                      return Container();
-                    }
-                    if (_isAdLoaded && index == _kAdIndex) {
-                      return Container(
-                        child: AdWidget(ad: _ad),
-                        width: _ad.size.width.toDouble(),
-                        height: 72.0,
-                        alignment: Alignment.center,
-                      );
-                    }
-                    final int count = news.length > 10 ? 10 : news.length;
-                    final Animation<double> animation =
-                        Tween<double>(begin: 0.0, end: 1.0).animate(
-                            CurvedAnimation(
-                                parent: animationController!,
-                                curve: Interval((1 / count) * index, 1.0,
-                                    curve: Curves.fastOutSlowIn)));
-                    animationController?.forward();
-                    return HotelListView(
-                      callback: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => NewsPage(news: news[index])));
-                      },
-                      hotelData: news[index],
-                      animation: animation,
-                      animationController: animationController!,
-                    );
-                  },
-                ),
+              return Column(
+                children: [
+                  _isAdLoaded
+                      ? Container(
+                          child: AdWidget(ad: _ad),
+                          width: _ad.size.width.toDouble(),
+                          height: 72.0,
+                          alignment: Alignment.center,
+                        )
+                      : Container(),
+                  Expanded(
+                    child: SmartRefresher(
+                      enablePullDown: true,
+                      enablePullUp: isLoadMore,
+                      header: WaterDropHeader(
+                        complete: Text("تم التحديث",
+                            style: Theme.of(context).textTheme.headline6),
+                      ),
+                      footer: CustomFooter(
+                        builder: (BuildContext context, LoadStatus? mode) {
+                          Widget body;
+                          if (mode == LoadStatus.idle) {
+                            body = Text(
+                              "أرفع لتحميل المزيد",
+                              style: Theme.of(context).textTheme.headline6,
+                            );
+                          } else if (mode == LoadStatus.loading) {
+                            body = CupertinoActivityIndicator();
+                          } else if (mode == LoadStatus.failed) {
+                            body = Text("فشل التحميل",
+                                style: Theme.of(context).textTheme.headline6);
+                          } else if (mode == LoadStatus.canLoading) {
+                            body = Text("أفلت لتحميل المزيد",
+                                style: Theme.of(context).textTheme.headline6);
+                          } else {
+                            body = Text("لايوجد مزيد من الأخبار",
+                                style: Theme.of(context).textTheme.headline6);
+                          }
+                          return Container(
+                            height: 55.0,
+                            child: Center(child: body),
+                          );
+                        },
+                      ),
+                      controller: _refreshController,
+                      onRefresh: _onRefresh,
+                      onLoading: _onLoading,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: pageCount,
+                        padding: const EdgeInsets.only(top: 8),
+                        scrollDirection: Axis.vertical,
+                        itemBuilder: (BuildContext context, int index) {
+                          if (index >= news.length) {
+                            return Container();
+                          }
+
+                          final int count = news.length > 10 ? 10 : news.length;
+                          final Animation<double> animation =
+                              Tween<double>(begin: 0.0, end: 1.0).animate(
+                                  CurvedAnimation(
+                                      parent: animationController!,
+                                      curve: Interval((1 / count) * index, 1.0,
+                                          curve: Curves.fastOutSlowIn)));
+                          animationController?.forward();
+                          return HotelListView(
+                            callback: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) =>
+                                          NewsPage(news: news[index])));
+                            },
+                            hotelData: news[index],
+                            animation: animation,
+                            animationController: animationController!,
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
               );
             }
             return Center(

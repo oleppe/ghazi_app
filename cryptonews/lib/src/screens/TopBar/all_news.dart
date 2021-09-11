@@ -81,7 +81,15 @@ class _AllNewsState extends State<AllNews>
                         return Column(
                           children: <Widget>[
                             //getSearchBarUI(context),
-                            VerticalSlider(imgList: news.take(4).toList())
+                            VerticalSlider(imgList: news.take(4).toList()),
+                            _isAdLoaded
+                                ? Container(
+                                    child: AdWidget(ad: _ad),
+                                    width: _ad.size.width.toDouble(),
+                                    height: 72.0,
+                                    alignment: Alignment.center,
+                                  )
+                                : Container(),
                           ],
                         );
                       }, childCount: 1),
@@ -110,14 +118,6 @@ class _AllNewsState extends State<AllNews>
                                   curve: Interval((1 / count) * index, 1.0,
                                       curve: Curves.fastOutSlowIn)));
                       animationController?.forward();
-                      if (_isAdLoaded && index == _kAdIndex) {
-                        return Container(
-                          child: AdWidget(ad: _ad),
-                          width: _ad.size.width.toDouble(),
-                          height: 72.0,
-                          alignment: Alignment.center,
-                        );
-                      }
                       return HotelListView(
                         callback: () {
                           Navigator.push(

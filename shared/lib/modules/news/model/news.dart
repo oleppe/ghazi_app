@@ -24,7 +24,8 @@ class News {
         name = snapshot['name'] ?? '',
         subText = snapshot['subText'] ?? '',
         description = snapshot['description'] ?? '',
-        imagePath = snapshot['imagePath'] ?? '',
+        imagePath =
+            snapshot['imagePath'] == 0 ? '' : snapshot['imagePath'] ?? '',
         views = snapshot['views'] ?? 15,
         like = snapshot['like'] ?? 3,
         createdAt = new DateTime.fromMicrosecondsSinceEpoch(

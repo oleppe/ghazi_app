@@ -1,5 +1,6 @@
 // ignore_for_file: import_of_legacy_library_into_null_safe
 import 'package:cryptonews/src/config/color_constants.dart';
+import 'package:cryptonews/src/config/image_constants.dart';
 import 'package:cryptonews/src/utils/AdHelper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -102,12 +103,17 @@ class _NewsPage extends State<NewsPage> with TickerProviderStateMixin {
                       children: [
                         AspectRatio(
                           aspectRatio: 1.2,
-                          child: Image.network(
-                            'https://firebasestorage.googleapis.com/v0/b/cryptonews-c3622.appspot.com/o/articles%2F' +
-                                widget.news.imagePath +
-                                '?alt=media',
-                            fit: BoxFit.cover,
-                          ),
+                          child: widget.news.imagePath != ''
+                              ? Image.network(
+                                  'https://firebasestorage.googleapis.com/v0/b/cryptonews-c3622.appspot.com/o/articles%2F' +
+                                      widget.news.imagePath +
+                                      '?alt=media',
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.asset(
+                                  AllImages().logo,
+                                  fit: BoxFit.contain,
+                                ),
                         ),
                         Container(
                           height: 110,
@@ -266,10 +272,10 @@ class _NewsPage extends State<NewsPage> with TickerProviderStateMixin {
                           left: 16, bottom: 16, right: 16),
                       child: InkWell(
                         onTap: () {
-                          Share.share(
-                              'تابع أحدث الأخبار على تطبيق أخبار كريبتو https://cryptonewsfun.page.link/?link=https://mayakroha.com.ua/iDzQ/?id=' +
-                                  widget.news.id +
-                                  '&apn=com.ghazi.cryptonews&afl=https://play.google.com/store/apps/details?id=com.ghazi.cryptonews');
+                          Share.share(widget.news.name +
+                              ' https://cryptonewsfun.page.link/?link=https://mayakroha.com.ua/iDzQ/?id=' +
+                              widget.news.id +
+                              '&apn=com.ghazi.cryptonews&afl=https://play.google.com/store/apps/details?id=com.ghazi.cryptonews');
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,

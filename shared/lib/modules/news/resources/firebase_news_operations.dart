@@ -26,16 +26,11 @@ class FirebaseNewsOperations extends ChangeNotifier {
   DocumentSnapshot nftDoc;
   DocumentSnapshot ethDoc;
   DocumentSnapshot otherdoc;
-  CollectionReference ref = Firestore.instance
-      .collection('products')
-      .where('category', isEqualTo: 'JmBGL48PzABcjDnm7g2m')
-      .reference();
+  CollectionReference ref = FirebaseFirestore.instance.collection('products');
   Future<List<News>> fetchNews(String categoryId) async {
     var result = await _api.getMainNewsCollection('products');
 
-    return result.documents
-        .map((doc) => News.fromMap(doc.data, doc.documentID))
-        .toList();
+    return result.docs.map((doc) => News.fromMap(doc.data(), doc.id)).toList();
   }
 
   Future<List<News>> fetchBitcoinNews(String categoryId, bool isFuture,
@@ -43,13 +38,12 @@ class FirebaseNewsOperations extends ChangeNotifier {
     if (refresh == true) bitcoinDoc = null;
     if (isFuture == true && bitcoinDoc != null) return [];
     var result = await _api.getProductCollection(ref, bitcoinDoc, categoryId);
-    if (result.documents.length == 0)
+    if (result.docs.length == 0)
       bitcoinDoc = null;
     else
-      bitcoinDoc = result.documents.last;
-    bitNews = result.documents
-        .map((doc) => News.fromMap(doc.data, doc.documentID))
-        .toList();
+      bitcoinDoc = result.docs.last;
+    bitNews =
+        result.docs.map((doc) => News.fromMap(doc.data(), doc.id)).toList();
     return bitNews;
   }
 
@@ -58,13 +52,12 @@ class FirebaseNewsOperations extends ChangeNotifier {
     if (refresh == true) altDoc = null;
     if (isFuture == true && altDoc != null) return [];
     var result = await _api.getProductCollection(ref, altDoc, categoryId);
-    if (result.documents.length == 0)
+    if (result.docs.length == 0)
       altDoc = null;
     else
-      altDoc = result.documents.last;
-    altNews = result.documents
-        .map((doc) => News.fromMap(doc.data, doc.documentID))
-        .toList();
+      altDoc = result.docs.last;
+    altNews =
+        result.docs.map((doc) => News.fromMap(doc.data(), doc.id)).toList();
     return altNews;
   }
 
@@ -73,13 +66,12 @@ class FirebaseNewsOperations extends ChangeNotifier {
     if (refresh == true) defiDoc = null;
     if (isFuture == true && defiDoc != null) return [];
     var result = await _api.getProductCollection(ref, defiDoc, categoryId);
-    if (result.documents.length == 0)
+    if (result.docs.length == 0)
       defiDoc = null;
     else
-      defiDoc = result.documents.last;
-    defiNews = result.documents
-        .map((doc) => News.fromMap(doc.data, doc.documentID))
-        .toList();
+      defiDoc = result.docs.last;
+    defiNews =
+        result.docs.map((doc) => News.fromMap(doc.data(), doc.id)).toList();
     return defiNews;
   }
 
@@ -89,13 +81,12 @@ class FirebaseNewsOperations extends ChangeNotifier {
     if (isFuture == true && blockchainDoc != null) return [];
     var result =
         await _api.getProductCollection(ref, blockchainDoc, categoryId);
-    if (result.documents.length == 0)
+    if (result.docs.length == 0)
       blockchainDoc = null;
     else
-      blockchainDoc = result.documents.last;
-    blockNews = result.documents
-        .map((doc) => News.fromMap(doc.data, doc.documentID))
-        .toList();
+      blockchainDoc = result.docs.last;
+    blockNews =
+        result.docs.map((doc) => News.fromMap(doc.data(), doc.id)).toList();
     return blockNews;
   }
 
@@ -104,13 +95,12 @@ class FirebaseNewsOperations extends ChangeNotifier {
     if (refresh == true) nftDoc = null;
     if (isFuture == true && nftDoc != null) return [];
     var result = await _api.getProductCollection(ref, nftDoc, categoryId);
-    if (result.documents.length == 0)
+    if (result.docs.length == 0)
       nftDoc = null;
     else
-      nftDoc = result.documents.last;
-    nftNews = result.documents
-        .map((doc) => News.fromMap(doc.data, doc.documentID))
-        .toList();
+      nftDoc = result.docs.last;
+    nftNews =
+        result.docs.map((doc) => News.fromMap(doc.data(), doc.id)).toList();
     return nftNews;
   }
 
@@ -119,13 +109,12 @@ class FirebaseNewsOperations extends ChangeNotifier {
     if (refresh == true) ethDoc = null;
     if (isFuture == true && ethDoc != null) return [];
     var result = await _api.getProductCollection(ref, ethDoc, categoryId);
-    if (result.documents.length == 0)
+    if (result.docs.length == 0)
       ethDoc = null;
     else
-      ethDoc = result.documents.last;
-    ethNews = result.documents
-        .map((doc) => News.fromMap(doc.data, doc.documentID))
-        .toList();
+      ethDoc = result.docs.last;
+    ethNews =
+        result.docs.map((doc) => News.fromMap(doc.data(), doc.id)).toList();
     return ethNews;
   }
 
@@ -134,13 +123,12 @@ class FirebaseNewsOperations extends ChangeNotifier {
     if (refresh == true) otherdoc = null;
     if (isFuture == true && otherdoc != null) return [];
     var result = await _api.getProductCollection(ref, otherdoc, categoryId);
-    if (result.documents.length == 0)
+    if (result.docs.length == 0)
       otherdoc = null;
     else
-      otherdoc = result.documents.last;
-    otherNews = result.documents
-        .map((doc) => News.fromMap(doc.data, doc.documentID))
-        .toList();
+      otherdoc = result.docs.last;
+    otherNews =
+        result.docs.map((doc) => News.fromMap(doc.data(), doc.id)).toList();
     return otherNews;
   }
 
@@ -150,13 +138,12 @@ class FirebaseNewsOperations extends ChangeNotifier {
     if (isFuture == true && twitterDoc != null) return [];
 
     var result = await _api.getProductCollection(ref, twitterDoc, categoryId);
-    if (result.documents.length == 0)
+    if (result.docs.length == 0)
       twitterDoc = null;
     else
-      twitterDoc = result.documents.last;
-    twitterNews = result.documents
-        .map((doc) => News.fromMap(doc.data, doc.documentID))
-        .toList();
+      twitterDoc = result.docs.last;
+    twitterNews =
+        result.docs.map((doc) => News.fromMap(doc.data(), doc.id)).toList();
     return twitterNews;
   }
 
@@ -166,7 +153,7 @@ class FirebaseNewsOperations extends ChangeNotifier {
 
   Future<News> getNewsById(String id) async {
     var doc = await _api.getDocumentById('products', id);
-    return News.fromMap(doc.data, doc.documentID);
+    return News.fromMap(doc.data(), doc.id);
   }
 
   Future removeBookStore(String id) async {

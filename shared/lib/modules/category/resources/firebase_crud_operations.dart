@@ -10,8 +10,8 @@ class FirebaseCRUDoperations extends ChangeNotifier {
 
   Future<List<Category>> fetchBookStores() async {
     var result = await _api.getDataCollection('categories');
-    bookStore = result.documents
-        .map((doc) => Category.fromMap(doc.data, doc.documentID))
+    bookStore = result.docs
+        .map((doc) => Category.fromMap(doc.data(), doc.id))
         .toList()
           ..sort((a, b) => a.order.compareTo(b.order));
     print(bookStore);
@@ -25,7 +25,7 @@ class FirebaseCRUDoperations extends ChangeNotifier {
 
   Future<Category> getBookStoreById(String id) async {
     var doc = await _api.getDocumentById('categories', id);
-    return Category.fromMap(doc.data, doc.documentID);
+    return Category.fromMap(doc.data(), doc.id);
   }
 
   Future removeBookStore(String id) async {

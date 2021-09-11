@@ -2,7 +2,9 @@
 import 'package:cryptonews/src/config/theme_data.dart';
 import 'package:cryptonews/src/routes/index.dart';
 import 'package:cryptonews/src/utils/app_state_notifier.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
@@ -18,26 +20,73 @@ class App extends StatefulWidget {
   _AppState createState() => _AppState();
 }
 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  //if (Firebase.apps.length == 0) await Firebase.initializeApp();
+
+  print("Handling a background message: ${message.messageId}");
+}
+
 class _AppState extends State<App> {
   @override
   initState() {
+    this.initFirebase();
+
     super.initState();
-    this.initDynamicLinks();
-    // FirebaseMessaging().configure(
-    //   onMessage: (Map<String, dynamic> message) async {
-    //     print("onMessage: $message");
-    //     //_showItemDialog(message);
-    //   },
-    //   onBackgroundMessage: myBackgroundMessageHandler,
-    //   onLaunch: (Map<String, dynamic> message) async {
-    //     print("onLaunch: $message");
-    //     //_navigateToItemDetail(message);
-    //   },
-    //   onResume: (Map<String, dynamic> message) async {
-    //     print("onResume: $message");
-    //     //_navigateToItemDetail(message);
-    //   },
-    // );
+  }
+
+  void setupInteractedMessage() async {
+    //if (Firebase.apps.length == 0) await Firebase.initializeApp();
+    // Get any messages which caused the application to open from
+    // a terminated state.
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+
+    // If the message also contains a data property with a "type" of "chat",
+    // navigate to a chat screen
+    if (initialMessage != null) {
+      _handleMessage(initialMessage);
+    }
+
+    // Also handle any interaction when the app is in the background via a
+    // Stream listener
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+  }
+
+  void _handleMessage(RemoteMessage message) {
+    if ((message.data['id'] as String).isNotEmpty) {
+      navigatorKey.currentState!.pushNamed(
+        '/news',
+        arguments: (message.data['id'] as String).trim(),
+      );
+    }
+  }
+
+  void firebaseMessageing() async {
+    //if (Firebase.apps.length == 0) await Firebase.initializeApp();
+
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+    print('User granted permission: ${settings.authorizationStatus}');
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification}');
+      }
+    });
   }
 
   void initDynamicLinks() async {
@@ -57,20 +106,13 @@ class _AppState extends State<App> {
     });
   }
 
-  // Future<dynamic> myBackgroundMessageHandler(
-  //     Map<String, dynamic> message) async {
-  //   if (message.containsKey('data')) {
-  //     // Handle data message
-  //     final dynamic data = message['data'];
-  //   }
-
-  //   if (message.containsKey('notification')) {
-  //     // Handle notification message
-  //     final dynamic notification = message['notification'];
-  //   }
-
-  //   // Or do other work.
-  // }
+  void initFirebase() async {
+    await Firebase.initializeApp();
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    this.initDynamicLinks();
+    this.firebaseMessageing();
+    this.setupInteractedMessage();
+  }
 
   final GlobalKey<NavigatorState> navigatorKey =
       new GlobalKey<NavigatorState>();

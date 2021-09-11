@@ -101,10 +101,10 @@ class _NewsScreenState extends State<NewsScreen> with TickerProviderStateMixin {
                               controller: controller,
                             ),
                             pageController: _controller,
-                            controller: controller,
+                            tabbarController: controller,
                           );
                         } else {
-                          return Text('fetching');
+                          return Text('');
                         }
                       },
                     ),
