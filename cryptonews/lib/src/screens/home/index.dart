@@ -40,124 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-
-    /*
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-NotificationSettings settings = await messaging.requestPermission(
-  alert: true,
-  announcement: false,
-  badge: true,
-  carPlay: false,
-  criticalAlert: false,
-  provisional: false,
-  sound: true,
-);
-
-if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-  print('User granted permission');
-} else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
-  print('User granted provisional permission');
-} else {
-  print('User declined or has not accepted permission');
-}
- */
-  }
-
-  AppBar buildAppBar(BuildContext context) {
-    return new AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-
-      // iconTheme: IconThemeData(color: Color(0xffe93d25)),
-      leading: Padding(
-        padding: const EdgeInsets.only(right: 15),
-        child: GestureDetector(
-          onTap: () {
-            _key.currentState!.openDrawer();
-          },
-          child: CircleAvatar(
-            radius: 30.0,
-            backgroundImage: Image.asset(
-              AllImages().user,
-            ).image,
-            backgroundColor: Colors.transparent,
-          ),
-        ),
-      ),
-
-      actions: [
-        Expanded(
-          child: searchBar
-              ? Padding(
-                  padding: EdgeInsets.only(right: 50),
-                  child: ListTile(
-                    leading: IconButton(
-                      icon: Icon(
-                        Icons.search,
-                        size: 30,
-                      ),
-                      onPressed: () {},
-                    ),
-                    title: Container(
-                      child: TextFormField(
-                        onChanged: (text) {},
-                        onEditingComplete: () {
-                          print("res");
-                        },
-                        focusNode: focusNode,
-                        controller: searchController,
-                        autocorrect: false,
-                        autofocus: false,
-                        style: Theme.of(context).textTheme.headline6,
-                        decoration: InputDecoration(
-                          hintText: "بحث",
-                        ),
-                      ),
-                    ),
-                    trailing: IconButton(
-                      icon: Icon(Icons.clear),
-                      onPressed: () {
-                        setState(() {
-                          searchBar = false;
-                        });
-                      },
-                    ),
-                  ),
-                )
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                        padding: const EdgeInsets.only(right: 55),
-                        child: IconButton(
-                            icon: Icon(
-                              Icons.search,
-                              size: 30,
-                            ),
-                            onPressed: () {
-                              FocusScope.of(context).requestFocus(focusNode);
-                              setState(() {
-                                searchBar = true;
-                              });
-                            })),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 25),
-                      child: Text(
-                        "أخبار كريبتو",
-                        style: Theme.of(context).textTheme.headline2,
-                      ),
-                    ),
-                  ],
-                ),
-        ),
-        // IconButton(
-        //     icon: Icon(Icons.logout),
-        //     onPressed: () {
-        //       authenticationBloc.add(UserLogOut());
-        //     }),
-      ],
-    );
   }
 
   Future<InitializationStatus> _initGoogleMobileAds() {
@@ -168,88 +50,83 @@ if (settings.authorizationStatus == AuthorizationStatus.authorized) {
   Widget build(BuildContext context) {
     authenticationBloc.add(GetUserData());
     return BlocBuilder<AuthenticationBloc, AuthenticationState>(
-        cubit: authenticationBloc,
         builder: (BuildContext context, AuthenticationState state) {
-          if (state is SetUserData) {
-            return WillPopScope(
-              onWillPop: () async {
-                //Navigator.pop(context);
-                if (Navigator.canPop(context))
-                  return true;
-                else
-                  return true;
-              },
-              child: Directionality(
-                textDirection: TextDirection.rtl,
-                child: Scaffold(
-                    key: _key,
-                    appBar: selectedScreen != 2
-                        ? PreferredSize(
-                            preferredSize: const Size.fromHeight(60),
-                            child: HomeAppBar(
-                              golbalKey: _key,
-                              appBar: AppBar(),
-                              searchBar: searchBar,
-                            ),
-                          )
-                        : null,
-                    body: FutureBuilder<InitializationStatus>(
-                      future: _initGoogleMobileAds(),
-                      builder: (context, snapshot) {
-                        return PersistentTabView(
-                          context,
-                          onItemSelected: (index) => {
-                            setState(() {
-                              selectedScreen = index;
-                            })
-                          },
-                          controller: _controller,
-                          screens: _buildScreens(),
-                          items: _navBarsItems(),
-                          confineInSafeArea: true,
-                          backgroundColor:
-                              Colors.white, // Default is Colors.white.
-                          handleAndroidBackButtonPress:
-                              true, // Default is true.
-                          resizeToAvoidBottomInset:
-                              true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
-                          stateManagement: true, // Default is true.
-                          hideNavigationBarWhenKeyboardShows:
-                              true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
-                          decoration: NavBarDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                            colorBehindNavBar: Colors.white,
-                          ),
-                          popAllScreensOnTapOfSelectedTab: true,
-                          popActionScreens: PopActionScreensType.all,
-                          itemAnimationProperties: ItemAnimationProperties(
-                            // Navigation Bar's items animation properties.
-                            duration: Duration(milliseconds: 200),
-                            curve: Curves.ease,
-                          ),
-                          screenTransitionAnimation: ScreenTransitionAnimation(
-                            // Screen transition animation on change of selected tab.
-                            animateTabTransition: true,
-                            curve: Curves.ease,
-                            duration: Duration(milliseconds: 200),
-                          ),
-                          navBarStyle: NavBarStyle
-                              .style6, // Choose the nav bar style with this property.
-                        );
+      if (state is SetUserData || state is AuthenticationInitial) {
+        return WillPopScope(
+          onWillPop: () async {
+            //Navigator.pop(context);
+            if (Navigator.canPop(context))
+              return true;
+            else
+              return true;
+          },
+          child: Directionality(
+            textDirection: TextDirection.rtl,
+            child: Scaffold(
+                key: _key,
+                appBar: selectedScreen != 2
+                    ? PreferredSize(
+                        preferredSize: const Size.fromHeight(60),
+                        child: HomeAppBar(
+                          golbalKey: _key,
+                          appBar: AppBar(),
+                          searchBar: searchBar,
+                        ),
+                      )
+                    : null,
+                body: FutureBuilder<InitializationStatus>(
+                  future: _initGoogleMobileAds(),
+                  builder: (context, snapshot) {
+                    return PersistentTabView(
+                      context,
+                      onItemSelected: (index) => {
+                        setState(() {
+                          selectedScreen = index;
+                        })
                       },
-                    ),
-                    drawer: HomeDrawer(
-                      state: state,
-                    )),
-              ),
-            );
-          }
-          return Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        });
+                      controller: _controller,
+                      screens: _buildScreens(),
+                      items: _navBarsItems(),
+                      confineInSafeArea: true,
+                      backgroundColor: Colors.white, // Default is Colors.white.
+                      handleAndroidBackButtonPress: true, // Default is true.
+                      resizeToAvoidBottomInset:
+                          true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
+                      stateManagement: true, // Default is true.
+                      hideNavigationBarWhenKeyboardShows:
+                          true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
+                      decoration: NavBarDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        colorBehindNavBar: Colors.white,
+                      ),
+                      popAllScreensOnTapOfSelectedTab: true,
+                      popActionScreens: PopActionScreensType.all,
+                      itemAnimationProperties: ItemAnimationProperties(
+                        // Navigation Bar's items animation properties.
+                        duration: Duration(milliseconds: 200),
+                        curve: Curves.ease,
+                      ),
+                      screenTransitionAnimation: ScreenTransitionAnimation(
+                        // Screen transition animation on change of selected tab.
+                        animateTabTransition: true,
+                        curve: Curves.ease,
+                        duration: Duration(milliseconds: 200),
+                      ),
+                      navBarStyle: NavBarStyle
+                          .style6, // Choose the nav bar style with this property.
+                    );
+                  },
+                ),
+                drawer: HomeDrawer()),
+          ),
+        );
+      }
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    });
   }
 
   List<Widget> _buildScreens() {

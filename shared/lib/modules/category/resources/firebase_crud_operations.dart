@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared/main.dart';
 import 'package:shared/modules/category/model/category.dart';
 
-class FirebaseCRUDoperations extends ChangeNotifier {
+class FirebaseCRUDoperations {
   FirebaseApi _api = locator<FirebaseApi>();
 
   List<Category> bookStore;
@@ -30,20 +30,17 @@ class FirebaseCRUDoperations extends ChangeNotifier {
 
   Future removeBookStore(String id) async {
     await _api.removeDocument('categories', id);
-    notifyListeners();
     return;
   }
 
   Future updateBookStore(Category data, String id) async {
     await _api.updateDocument('categories', data.toJson(), id);
-    notifyListeners();
     return;
   }
 
   Future addBookStore(Category data) async {
     // ignore: unused_local_variable
     var result = await _api.addDocument('categories', data.toJson());
-    notifyListeners();
     return;
   }
 }

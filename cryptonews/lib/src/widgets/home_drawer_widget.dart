@@ -3,11 +3,13 @@ import 'dart:io';
 import 'package:cryptonews/src/config/color_constants.dart';
 import 'package:cryptonews/src/config/image_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 // ignore: import_of_legacy_library_into_null_safe
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:provider/provider.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:shared/main.dart';
+import 'package:shared/modules/app/bloc/app_bloc.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:shared/modules/authentication/bloc/authentication/authentication_state.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -15,12 +17,12 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:shared/modules/contacts/model/Contact.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:shared/modules/contacts/firebase_crud_contact.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 // ignore: must_be_immutable
 class HomeDrawer extends StatelessWidget {
-  HomeDrawer({Key? key, required this.state}) : super(key: key);
+  HomeDrawer({Key? key}) : super(key: key);
 
-  SetUserData state;
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -81,7 +83,7 @@ class HomeDrawer extends StatelessWidget {
                   builder: (BuildContext context) {
                     Contact contact = Contact();
                     final contactProvider =
-                        Provider.of<FirebaseCRUDcontact>(context);
+                        RepositoryProvider.of<FirebaseCRUDcontact>(context);
                     return AlertDialog(
                       scrollable: true,
                       title: Text('تواصل معنا'),
@@ -151,7 +153,23 @@ class HomeDrawer extends StatelessWidget {
               if (await canLaunch(url)) {
                 await launch(url);
               }
-            })
+            }),
+        ListTile(
+          leading: Icon(
+            Icons.star,
+            size: 35,
+          ),
+          title: Text("قيم التطبيق", style: TextStyle(fontSize: 16.0)),
+          subtitle: Switch(
+            value: BlocProvider.of<AppBloc>(context).state.isDark,
+            onChanged: (value) {
+              if (value == true)
+                BlocProvider.of<AppBloc>(context)..add(SwitchToDarkEvent());
+              else
+                BlocProvider.of<AppBloc>(context)..add(SwitchToLightEvent());
+            },
+          ),
+        )
       ]),
     );
   }

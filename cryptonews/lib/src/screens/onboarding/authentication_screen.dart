@@ -36,113 +36,106 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
     }
 
     return Scaffold(
-        body: WillPopScope(
-      onWillPop: () async => false,
-      child: BlocListener<AuthenticationBloc, AuthenticationState>(
-        cubit: authenticationBloc,
-        listener: (context, state) {
+      body: WillPopScope(
+        onWillPop: () async => false,
+        child: BlocConsumer<AuthenticationBloc, AuthenticationState>(
+            listener: (context, state) {
           if (state is AuthenticationFailure) {
             _showError(state.message);
           } else if (state is AppAutheticated) {
             Navigator.pushNamed(context, '/home');
           }
-        },
-        child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-            cubit: authenticationBloc,
-            builder: (BuildContext context, AuthenticationState state) {
-              return SafeArea(
-                child: Stack(
-                  children: [
-                    Center(
-                      child: ListView(
-                        shrinkWrap: true,
-                        children: [
-                          Center(
-                              child: Text(
-                            showLoginForm ? 'تسجيل الدخول' : 'تسجيل',
-                            style: Theme.of(context).textTheme.headline2,
-                          )),
-                          Padding(
-                            padding: const EdgeInsets.all(32.0),
-                            child: showLoginForm
-                                ? LoginForm(
-                                    authenticationBloc: authenticationBloc,
-                                    state: state,
-                                  )
-                                : SignUpForm(
-                                    authenticationBloc: authenticationBloc,
-                                    state: state,
-                                  ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Divider(),
-                          ),
-                          showLoginForm
-                              ? SizedBox()
-                              : Center(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                        height: 38,
-                                      ),
-                                      Text(
-                                        'بالفعل لديك حساب؟',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1,
-                                      ),
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      // ignore: deprecated_member_use
-                                      RaisedButton(
-                                          color: Color(0xff5E92F3),
-                                          textColor: Colors.white,
-                                          padding: const EdgeInsets.all(16),
-                                          shape: new RoundedRectangleBorder(
-                                              borderRadius:
-                                                  new BorderRadius.circular(
-                                                      8.0)),
-                                          child: Text('تسجيل دخول',
-                                              style: TextStyle(
-                                                  color: ColorConstants
-                                                      .secondaryDarkAppColor)),
-                                          onPressed: () {
-                                            setState(() {
-                                              showLoginForm = true;
-                                            });
-                                          })
-                                    ],
-                                  ),
-                                ),
-                        ],
-                      ),
-                    ),
-                    !showLoginForm
-                        ? SizedBox()
-                        : Positioned(
-                            left: 6,
-                            child: IconButton(
-                              icon: Icon(
-                                Icons.arrow_back_ios_new_rounded,
-                                size: 32,
-                                color: Theme.of(context).primaryColor,
+        }, builder: (BuildContext context, AuthenticationState state) {
+          return SafeArea(
+            child: Stack(
+              children: [
+                Center(
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: [
+                      Center(
+                          child: Text(
+                        showLoginForm ? 'تسجيل الدخول' : 'تسجيل',
+                        style: Theme.of(context).textTheme.headline2,
+                      )),
+                      Padding(
+                        padding: const EdgeInsets.all(32.0),
+                        child: showLoginForm
+                            ? LoginForm(
+                                authenticationBloc: authenticationBloc,
+                                state: state,
+                              )
+                            : SignUpForm(
+                                authenticationBloc: authenticationBloc,
+                                state: state,
                               ),
-                              onPressed: () {
-                                setState(() {
-                                  showLoginForm = false;
-                                });
-                              },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Divider(),
+                      ),
+                      showLoginForm
+                          ? SizedBox()
+                          : Center(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    height: 38,
+                                  ),
+                                  Text(
+                                    'بالفعل لديك حساب؟',
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                  ),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  // ignore: deprecated_member_use
+                                  RaisedButton(
+                                      color: Color(0xff5E92F3),
+                                      textColor: Colors.white,
+                                      padding: const EdgeInsets.all(16),
+                                      shape: new RoundedRectangleBorder(
+                                          borderRadius:
+                                              new BorderRadius.circular(8.0)),
+                                      child: Text('تسجيل دخول',
+                                          style: TextStyle(
+                                              color: ColorConstants
+                                                  .secondaryDarkAppColor)),
+                                      onPressed: () {
+                                        setState(() {
+                                          showLoginForm = true;
+                                        });
+                                      })
+                                ],
+                              ),
                             ),
-                          )
-                  ],
+                    ],
+                  ),
                 ),
-              );
-            }),
+                !showLoginForm
+                    ? SizedBox()
+                    : Positioned(
+                        left: 6,
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.arrow_back_ios_new_rounded,
+                            size: 32,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              showLoginForm = false;
+                            });
+                          },
+                        ),
+                      )
+              ],
+            ),
+          );
+        }),
       ),
-    ));
+    );
   }
 }

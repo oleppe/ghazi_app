@@ -3,13 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:shared/main.dart';
 import 'package:shared/modules/contacts/model/Contact.dart';
 
-class FirebaseCRUDcontact extends ChangeNotifier {
+class FirebaseCRUDcontact {
   FirebaseApi _api = locator<FirebaseApi>();
 
   Future addContact(Contact data) async {
     // ignore: unused_local_variable
     var result = await _api.addDocument('contact', data.toJson());
-    notifyListeners();
     return;
   }
 }

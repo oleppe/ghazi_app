@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:shared/main.dart';
 // import 'package:shared/modules/authentication/models/current_user_data.dart';
 
@@ -12,7 +13,6 @@ class AuthenticationBloc
   AuthenticationBloc() : super(AuthenticationInitial());
   final AuthenticationRepository authenticationService =
       AuthenticationRepository();
-
   @override
   Stream<AuthenticationState> mapEventToState(
       AuthenticationEvent event) async* {

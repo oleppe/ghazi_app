@@ -6,6 +6,7 @@ import 'package:cryptonews/src/widgets/contest_tab_header.dart';
 import 'package:cryptonews/src/widgets/vertical_coin.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import "dart:collection";
 import "dart:async";
 import "package:intl/intl.dart";
@@ -212,7 +213,7 @@ class _CryptoScreenState extends State<CryptoScreen> {
       }
     }
     setState(() {
-      _savedCoins = Provider.of<HomeModel>(context).savedCoins;
+      _savedCoins = RepositoryProvider.of<HomeModel>(context).savedCoins;
 
       if (widget.savedPage) {
         sortedKeys = List.from(_savedCoins)..sort(sortBy(sortingBy));
@@ -619,9 +620,9 @@ class _PriceTextState extends State<PriceText> {
   @override
   Widget build(BuildContext context) {
     var format = NumberFormat.simpleCurrency(
-        name: Provider.of<HomeModel>(context).symbol);
-    num price =
-        data!["priceUsd"] * Provider.of<HomeModel>(context).exchangeRate;
+        name: RepositoryProvider.of<HomeModel>(context).symbol);
+    num price = data!["priceUsd"] *
+        RepositoryProvider.of<HomeModel>(context).exchangeRate;
     return Text(
         price >= 0
             ? format.currencySymbol +
@@ -677,12 +678,12 @@ class _CryptoState extends State<Crypto> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     num mCap = data!["marketCapUsd"];
-    mCap *= Provider.of<HomeModel>(context).exchangeRate;
+    mCap *= RepositoryProvider.of<HomeModel>(context).exchangeRate;
     num change = data!["changePercent24Hr"];
     String shortName = data!["symbol"];
 
     var format = NumberFormat.simpleCurrency(
-        name: Provider.of<HomeModel>(context).symbol);
+        name: RepositoryProvider.of<HomeModel>(context).symbol);
     return Padding(
       padding: const EdgeInsets.all(5),
       child: Container(
@@ -696,7 +697,8 @@ class _CryptoState extends State<Crypto> {
                   blurRadius: 10.0),
             ],
           ),
-          height: !Provider.of<HomeModel>(context).settings["disableGraphs"]
+          height: !RepositoryProvider.of<HomeModel>(context)
+                  .settings["disableGraphs"]
               ? 90.0
               : 100.0,
           padding:
@@ -723,7 +725,7 @@ class _CryptoState extends State<Crypto> {
                   direction: DismissDirection.endToStart,
                   onDismissed: (d) {
                     _savedCoins.remove(widget.id);
-                    Provider.of<HomeModel>(context)
+                    RepositoryProvider.of<HomeModel>(context)
                         .updateSavedCoin(_savedCoins);
                     context
                         .findAncestorStateOfType<_CryptoScreenState>()!
@@ -752,7 +754,8 @@ class _CryptoState extends State<Crypto> {
                           context
                               .findAncestorStateOfType<_CryptoScreenState>()!
                               .setState(() {});
-                          Provider.of<HomeModel>(context, listen: false)
+                          RepositoryProvider.of<HomeModel>(context,
+                                  listen: false)
                               .updateSavedCoin(_savedCoins);
                         } else {
                           Navigator.push(
@@ -765,12 +768,14 @@ class _CryptoState extends State<Crypto> {
                           if (saved) {
                             saved = false;
                             _savedCoins.remove(widget.id);
-                            Provider.of<HomeModel>(context, listen: false)
+                            RepositoryProvider.of<HomeModel>(context,
+                                    listen: false)
                                 .updateSavedCoin(_savedCoins);
                           } else {
                             saved = true;
                             _savedCoins.add(widget.id);
-                            Provider.of<HomeModel>(context, listen: false)
+                            RepositoryProvider.of<HomeModel>(context,
+                                    listen: false)
                                 .updateSavedCoin(_savedCoins);
                           }
                         });
@@ -843,7 +848,7 @@ class _CryptoState extends State<Crypto> {
                               SizedBox(
                                 height: 5,
                               ),
-                              Provider.of<HomeModel>(context)
+                              RepositoryProvider.of<HomeModel>(context)
                                       .settings["disableGraphs"]
                                   ? linkMap[shortName] != null &&
                                           !blacklist.contains(widget.id)
@@ -1103,7 +1108,7 @@ class _InfoState extends State<Info> {
   @override
   Widget build(BuildContext context) {
     var format = NumberFormat.simpleCurrency(
-        name: Provider.of<HomeModel>(context).symbol);
+        name: RepositoryProvider.of<HomeModel>(context).symbol);
     dynamic value = data![widget.id];
     String text;
     if ((widget.id == "changePercent24Hr" && value == -1000000) ||
@@ -1124,7 +1129,7 @@ class _InfoState extends State<Info> {
                     : 7);
       } else if (widget.id == "marketCapUsd") {
         formatter = NumberFormat.currency(
-            symbol: Provider.of<HomeModel>(context).symbol,
+            symbol: RepositoryProvider.of<HomeModel>(context).symbol,
             decimalDigits: value > 1 ? 0 : 2);
       } else if (widget.id == "changePercent24Hr") {
         formatter = NumberFormat.currency(symbol: "", decimalDigits: 3);
@@ -1257,7 +1262,7 @@ class _SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
     double dif, factor, visMax = 0.0, visMin = 0.0;
     DateFormat xFormatter = formatMap[widget.period]!;
     NumberFormat yFormatter = NumberFormat.currency(
-        symbol: Provider.of<HomeModel>(context)
+        symbol: RepositoryProvider.of<HomeModel>(context)
             .symbol
             .toString()
             .replaceAll("\.", ""),
@@ -1335,7 +1340,8 @@ class _SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
     if (info.length > 1) {
       for (int i = 0; i < info["data"].length; i++) {
         num val = num.parse(info["data"][i]["priceUsd"]) *
-            Provider.of<HomeModel>(context, listen: false).exchangeRate;
+            RepositoryProvider.of<HomeModel>(context, listen: false)
+                .exchangeRate;
         minVal = min(minVal, val);
         maxVal = max(maxVal, val);
         data.add(TimeSeriesPrice(

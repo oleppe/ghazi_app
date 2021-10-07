@@ -18,6 +18,7 @@ class News {
   String imagePath;
   int views;
   int like;
+  Timestamp timestamp;
   DateTime createdAt;
   News.fromMap(Map snapshot, String id)
       : id = id ?? '',
@@ -28,6 +29,7 @@ class News {
             snapshot['imagePath'] == 0 ? '' : snapshot['imagePath'] ?? '',
         views = snapshot['views'] ?? 15,
         like = snapshot['like'] ?? 3,
+        timestamp = snapshot['created_at'] as Timestamp,
         createdAt = new DateTime.fromMicrosecondsSinceEpoch(
             (snapshot['created_at'] as Timestamp).microsecondsSinceEpoch);
 

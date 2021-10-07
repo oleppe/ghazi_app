@@ -1,8 +1,10 @@
 // ignore_for_file: import_of_legacy_library_into_null_safe
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cryptonews/src/screens/news/news_page.dart';
 import 'package:cryptonews/src/utils/AdHelper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -61,20 +63,21 @@ class _PageItemState extends State<PageItem>
   late BannerAd _ad;
 
   bool _isAdLoaded = false;
-
+  News? lastDoc;
   @override
   Widget build(BuildContext context) {
-    newsContext = Provider.of<FirebaseNewsOperations>(context);
+    newsContext = RepositoryProvider.of<FirebaseNewsOperations>(context);
     super.build(context);
     return Container(
       color: Theme.of(context).backgroundColor,
       child: FutureBuilder<List<News>>(
-          future: newsContext.fetchBitcoinNews(widget.category, true),
+          future: newsContext.fetchBitcoinNews(widget.category, lastDoc, true),
           builder: (BuildContext context, AsyncSnapshot<List<News>> snapshot) {
             if (snapshot.hasData) {
               if (news.length == 0) {
                 news = (snapshot.data)!;
               }
+              lastDoc = news.last;
               pageCount = news.length;
               return Column(
                 children: [
@@ -174,10 +177,11 @@ class _PageItemState extends State<PageItem>
   }
 
   void _onRefresh() async {
-    news = await newsContext.fetchBitcoinNews(widget.category, false,
+    news = await newsContext.fetchBitcoinNews(widget.category, lastDoc, false,
         refresh: true);
     setState(() {
       isLoadMore = true;
+      lastDoc = news.last;
       pageCount = news.length;
       _refreshController.refreshCompleted();
     });
@@ -186,9 +190,9 @@ class _PageItemState extends State<PageItem>
   void _onLoading() async {
     if (isLoadMore == false) return;
     List<News> loadNews =
-        await newsContext.fetchBitcoinNews(widget.category, false);
+        await newsContext.fetchBitcoinNews(widget.category, lastDoc, false);
     if (loadNews.length < 3) isLoadMore = false;
-
+    lastDoc = news.last;
     pageCount = news.length;
 
     if (mounted)

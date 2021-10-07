@@ -1,7 +1,9 @@
 // ignore_for_file: import_of_legacy_library_into_null_safe
 import 'package:cryptonews/src/config/color_constants.dart';
+import 'package:cryptonews/src/config/image_constants.dart';
 import 'package:cryptonews/src/widgets/news_appbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html/style.dart';
 import 'package:intl/intl.dart';
@@ -9,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:shared/modules/news/model/news.dart' show News;
 import 'package:shared/modules/news/resources/firebase_news_operations.dart';
+import 'package:api_sdk/main.dart';
 
 class NewsPageEx extends StatefulWidget {
   final String id;
@@ -54,7 +57,7 @@ class _NewsPageEx extends State<NewsPageEx> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     late FirebaseNewsOperations newsContext =
-        Provider.of<FirebaseNewsOperations>(context);
+        RepositoryProvider.of<FirebaseNewsOperations>(context);
     final f = new DateFormat('dd-MM-yy');
     return SafeArea(
       child: Scaffold(
@@ -80,12 +83,17 @@ class _NewsPageEx extends State<NewsPageEx> with TickerProviderStateMixin {
                             children: [
                               AspectRatio(
                                 aspectRatio: 1.2,
-                                child: Image.network(
-                                  'https://firebasestorage.googleapis.com/v0/b/cryptonews-c3622.appspot.com/o/articles%2F' +
-                                      news.imagePath +
-                                      '?alt=media',
-                                  fit: BoxFit.cover,
-                                ),
+                                child: news.imagePath != ''
+                                    ? Image.network(
+                                        'https://firebasestorage.googleapis.com/v0/b/cryptonews-c3622.appspot.com/o/articles%2F' +
+                                            news.imagePath +
+                                            '?alt=media',
+                                        fit: BoxFit.cover,
+                                      )
+                                    : Image.asset(
+                                        AllImages().logo,
+                                        fit: BoxFit.contain,
+                                      ),
                               ),
                               Container(
                                 height: 110,
@@ -255,11 +263,13 @@ class _NewsPageEx extends State<NewsPageEx> with TickerProviderStateMixin {
                             padding: const EdgeInsets.only(
                                 left: 16, bottom: 16, right: 16),
                             child: InkWell(
-                              onTap: () {
-                                Share.share(
-                                    'تابع أحدث الأخبار على تطبيق أخبار كريبتو https://cryptonewsfun.page.link/?link=https://mayakroha.com.ua/iDzQ/?id=' +
-                                        news.id +
-                                        '&apn=com.ghazi.cryptonews&afl=https://play.google.com/store/apps/details?id=com.ghazi.cryptonews');
+                              onTap: () async {
+                                var parsedData = Uri.encodeComponent(
+                                    'https://cryptonewsfun.page.link/?link=https://cryptonewsfun.page.link/zXbp/?id=${news.id}&apn=com.ghazi.cryptonews&afl=https://play.google.com/store/apps/details?id=com.ghazi.cryptonews');
+                                String short =
+                                    await ApiSdk.generateShortLink(parsedData);
+
+                                Share.share(news.name + " " + short);
                               },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,

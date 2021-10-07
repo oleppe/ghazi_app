@@ -41,4 +41,15 @@ class ApiSdk {
       return null;
     }
   }
+
+  static generateShortLink(String url) async {
+    try {
+      final response = await RestApiHandlerData.getData(
+          'http://ghazinews.com/yourls-api.php?username=admin&password=5352064000&action=shorturl&format=json&url=$url');
+      return response["shorturl"];
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
 }

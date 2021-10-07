@@ -1,14 +1,24 @@
 import 'dart:collection';
 
 import 'package:api_sdk/main.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart' as pathProvider;
 import 'package:local_database/local_database.dart';
 
-class HomeModel with ChangeNotifier {
-  HomeModel() {
-    //getSettings();
-  }
+class HomeModel extends Equatable {
+  @override
+  // TODO: implement props
+  List<Object> get props => [
+        firstTime,
+        exchangeRate,
+        settings,
+        savedCoins,
+        sortedKeys,
+        symbol,
+        conversionMap
+      ];
+
   Map<String, dynamic> _settings = {};
   num _exchangeRate = 0;
   bool _firstTime = true;
@@ -22,7 +32,6 @@ class HomeModel with ChangeNotifier {
   List<String> get sortedKeys => _sortedKeys;
   set sortedKeys(List<String> val) {
     _sortedKeys = val;
-    notifyListeners();
   }
 
   String _symbol = 'USD';
@@ -41,21 +50,18 @@ class HomeModel with ChangeNotifier {
   // }
   removeSortedKeys(value) async {
     _sortedKeys.remove(value);
-    notifyListeners();
   }
 
   getSavedCoin() async {
     Database _userData = new Database(
         (await pathProvider.getApplicationDocumentsDirectory()).path);
     _savedCoins = (await _userData["saved"])?.cast<String>() ?? [];
-    notifyListeners();
   }
 
   setSortedKeys() async {
     Database _userData = new Database(
         (await pathProvider.getApplicationDocumentsDirectory()).path);
     _savedCoins = (await _userData["saved"])?.cast<String>() ?? [];
-    notifyListeners();
   }
 
   getSettings() async {
@@ -90,15 +96,12 @@ class HomeModel with ChangeNotifier {
       var conversionData = _conversionMap[_settings["currency"] ?? "USD"];
       _exchangeRate = conversionData["rate"];
     }
-
-    notifyListeners();
   }
 
   setFirstTime() async {
     Database _userData = new Database(
         (await pathProvider.getApplicationDocumentsDirectory()).path);
     _userData["firstTime"] = false;
-    notifyListeners();
   }
 
   updateSettings(dynamic inventory) async {
@@ -110,7 +113,6 @@ class HomeModel with ChangeNotifier {
     var conversionData = _conversionMap[_settings["currency"]];
     _exchangeRate = conversionData["rate"];
     _symbol = conversionData["symbol"];
-    notifyListeners();
   }
 
   updateSavedCoin(data) async {
@@ -118,7 +120,6 @@ class HomeModel with ChangeNotifier {
         (await pathProvider.getApplicationDocumentsDirectory()).path);
     _userData["saved"] = data;
     _savedCoins = data;
-    notifyListeners();
   }
 
   updateCurrency(dynamic inventory) async {
@@ -131,7 +132,6 @@ class HomeModel with ChangeNotifier {
     var conversionData = _conversionMap[_settings["currency"]];
     _exchangeRate = conversionData["rate"];
     _symbol = conversionData["symbol"];
-    notifyListeners();
   }
 
   addSavedCoin(dynamic coin) async {
@@ -140,8 +140,6 @@ class HomeModel with ChangeNotifier {
 
     _savedCoins.add(coin);
     _userData["saved"] = _savedCoins;
-
-    notifyListeners();
   }
 
   deleteSavedCoin(dynamic coin) async {
@@ -150,8 +148,6 @@ class HomeModel with ChangeNotifier {
 
     _savedCoins.remove(coin);
     _userData["saved"] = _savedCoins;
-
-    notifyListeners();
   }
 
   LinkedHashSet<String> get supportedCurrencies => LinkedHashSet.from([

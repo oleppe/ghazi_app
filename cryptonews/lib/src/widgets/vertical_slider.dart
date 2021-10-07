@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cryptonews/src/config/image_constants.dart';
 import 'package:cryptonews/src/screens/news/news_page.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -25,13 +26,19 @@ class VerticalSlider extends StatelessWidget {
                   borderRadius: BorderRadius.all(Radius.circular(5.0)),
                   child: Stack(
                     children: <Widget>[
-                      Image.network(
-                        'https://firebasestorage.googleapis.com/v0/b/cryptonews-c3622.appspot.com/o/articles%2F' +
-                            item.imagePath +
-                            '?alt=media',
-                        fit: BoxFit.fill,
-                        width: 1000.0,
-                      ),
+                      item.imagePath != ''
+                          ? Image.network(
+                              'https://firebasestorage.googleapis.com/v0/b/cryptonews-c3622.appspot.com/o/articles%2F' +
+                                  item.imagePath +
+                                  '?alt=media',
+                              fit: BoxFit.cover,
+                              width: 1000.0,
+                            )
+                          : Image.asset(
+                              AllImages().logo,
+                              fit: BoxFit.contain,
+                              width: 1000.0,
+                            ),
                       Positioned(
                         bottom: 0.0,
                         left: 0.0,

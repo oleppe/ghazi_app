@@ -5,6 +5,7 @@ import 'package:cryptonews/src/config/image_constants.dart';
 import 'package:cryptonews/src/screens/crypto/image_keys.dart';
 import 'package:cryptonews/src/screens/navbar/crypto_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -23,7 +24,7 @@ class VerticalCoin extends StatelessWidget {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     var format = NumberFormat.simpleCurrency(
-        name: Provider.of<HomeModel>(context).symbol);
+        name: RepositoryProvider.of<HomeModel>(context).symbol);
 
     List<Widget> imageSliders = imgList
         .map(

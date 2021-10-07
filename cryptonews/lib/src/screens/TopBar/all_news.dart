@@ -5,6 +5,7 @@ import 'package:cryptonews/src/widgets/filter_screen.dart';
 import 'package:cryptonews/src/widgets/hotel_list_view.dart';
 import 'package:cryptonews/src/widgets/vertical_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:provider/provider.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -61,7 +62,7 @@ class _AllNewsState extends State<AllNews>
 
   @override
   Widget build(BuildContext context) {
-    newsContext = Provider.of<FirebaseNewsOperations>(context);
+    newsContext = RepositoryProvider.of<FirebaseNewsOperations>(context);
     super.build(context);
     return Container(
       child: FutureBuilder<List<News>>(

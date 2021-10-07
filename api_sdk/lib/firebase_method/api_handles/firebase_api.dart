@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared/modules/news/model/news.dart';
 
 class FirebaseApi {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -22,7 +23,7 @@ class FirebaseApi {
   }
 
   Future<QuerySnapshot> getProductCollection(
-      CollectionReference ref, DocumentSnapshot last, String categoryId) {
+      CollectionReference ref, News last, String categoryId) {
     if (last == null)
       try {
         return ref
@@ -38,7 +39,7 @@ class FirebaseApi {
     return ref
         .where('category', isEqualTo: categoryId)
         .orderBy('created_at', descending: true)
-        .startAfterDocument(last)
+        .startAfter([last.timestamp])
         .limit(3)
         .get();
   }
